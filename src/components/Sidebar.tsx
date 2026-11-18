@@ -16,28 +16,49 @@ import {
   Building2,
   FileUser,
   BriefcaseBusiness,
+  Briefcase,
   Flame,
   ChartNoAxesCombined,
   BrainCircuit,
   Settings,
   X,
   Sparkles,
+  CircleHelp,
+  Sunrise,
+  Bell,
+  Mic,
+  BookHeart,
+  ClipboardCheck,
+  Calculator,
+  CalendarCheck,
+  BookOpenCheck,
+  Activity,
 } from "lucide-react";
 
 const iconMap = {
   "layout-dashboard": LayoutDashboard,
   target: Target,
+  sunrise: Sunrise,
   "calendar-days": CalendarDays,
+  bell: Bell,
   bot: Bot,
+  mic: Mic,
+  "book-heart": BookHeart,
+  "clipboard-check": ClipboardCheck,
   "graduation-cap": GraduationCap,
+  calculator: Calculator,
+  "calendar-check": CalendarCheck,
+  "book-open-check": BookOpenCheck,
   map: Map,
   code: Code,
+  "chart-no-axes-combined": ChartNoAxesCombined,
+  flame: Flame,
+  activity: Activity,
   brain: Brain,
   "building-2": Building2,
-  "file-user": FileUser,
   "briefcase-business": BriefcaseBusiness,
-  flame: Flame,
-  "chart-no-axes-combined": ChartNoAxesCombined,
+  briefcase: Briefcase,
+  "file-user": FileUser,
   "brain-circuit": BrainCircuit,
   settings: Settings,
 };
@@ -54,6 +75,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
     <>
       {open && (
         <button
+          type="button"
           aria-label="Close sidebar"
           onClick={onClose}
           className="fixed inset-0 z-40 bg-black/70 lg:hidden"
@@ -66,12 +88,19 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
         }`}
       >
         <div className="flex h-20 items-center justify-between border-b border-white/10 px-5">
-          <Link href="/" onClick={onClose} className="flex items-center gap-3">
+          <Link
+            href="/"
+            onClick={onClose}
+            className="flex items-center gap-3"
+          >
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#9855FF] to-[#20C8FF]">
               <Sparkles className="h-6 w-6 text-white" />
             </div>
+
             <div>
-              <h1 className="text-lg font-bold text-white">CareerOS AI</h1>
+              <h1 className="text-lg font-bold text-white">
+                CareerOS AI
+              </h1>
               <p className="text-[10px] tracking-widest text-gray-500">
                 YOUR CAREER COMPANION
               </p>
@@ -79,9 +108,10 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
           </Link>
 
           <button
+            type="button"
             onClick={onClose}
             className="text-gray-400 hover:text-white lg:hidden"
-            aria-label="Close"
+            aria-label="Close sidebar"
           >
             <X size={20} />
           </button>
@@ -97,7 +127,8 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
               <div className="space-y-1">
                 {group.items.map((item) => {
                   const Icon =
-                    iconMap[item.icon as keyof typeof iconMap];
+                    iconMap[item.icon as keyof typeof iconMap] ??
+                    CircleHelp;
 
                   const active =
                     pathname === item.href ||
@@ -119,10 +150,14 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                       <Icon
                         size={18}
                         className={
-                          active ? "text-[#B58AFF]" : "text-gray-500"
+                          active
+                            ? "text-[#B58AFF]"
+                            : "text-gray-500"
                         }
                       />
+
                       <span>{item.title}</span>
+
                       {active && (
                         <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[#20C8FF]" />
                       )}
@@ -139,6 +174,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
             <p className="text-xs font-semibold text-white">
               CareerOS AI
             </p>
+
             <p className="mt-1 text-[11px] text-gray-400">
               Your journey. Your growth. Your future.
             </p>
