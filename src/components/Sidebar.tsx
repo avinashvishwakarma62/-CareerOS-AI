@@ -3,7 +3,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 import { navigationGroups } from "@/lib/navigation";
+
 import {
   LayoutDashboard,
   Target,
@@ -15,7 +17,6 @@ import {
   Brain,
   Building2,
   FileUser,
-  BriefcaseBusiness,
   Briefcase,
   Flame,
   ChartNoAxesCombined,
@@ -23,7 +24,6 @@ import {
   Settings,
   X,
   Sparkles,
-  CircleHelp,
   Sunrise,
   Bell,
   Mic,
@@ -38,29 +38,29 @@ import {
 const iconMap = {
   "layout-dashboard": LayoutDashboard,
   target: Target,
-  sunrise: Sunrise,
   "calendar-days": CalendarDays,
-  bell: Bell,
   bot: Bot,
+  "graduation-cap": GraduationCap,
+  map: Map,
+  code: Code,
+  brain: Brain,
+  "building-2": Building2,
+  "file-user": FileUser,
+  "briefcase-business": Briefcase,
+  briefcase: Briefcase,
+  flame: Flame,
+  "chart-no-axes-combined": ChartNoAxesCombined,
+  "brain-circuit": BrainCircuit,
+  settings: Settings,
+  sunrise: Sunrise,
+  bell: Bell,
   mic: Mic,
   "book-heart": BookHeart,
   "clipboard-check": ClipboardCheck,
-  "graduation-cap": GraduationCap,
   calculator: Calculator,
   "calendar-check": CalendarCheck,
   "book-open-check": BookOpenCheck,
-  map: Map,
-  code: Code,
-  "chart-no-axes-combined": ChartNoAxesCombined,
-  flame: Flame,
   activity: Activity,
-  brain: Brain,
-  "building-2": Building2,
-  "briefcase-business": BriefcaseBusiness,
-  briefcase: Briefcase,
-  "file-user": FileUser,
-  "brain-circuit": BrainCircuit,
-  settings: Settings,
 };
 
 type SidebarProps = {
@@ -68,14 +68,35 @@ type SidebarProps = {
   onClose: () => void;
 };
 
+const SCROLL_KEY = "careeros-sidebar-scroll";
+
 export default function Sidebar({ open, onClose }: SidebarProps) {
   const pathname = usePathname();
+  const navRef = useRef<HTMLElement>(null);
+
+  // Restore sidebar scroll position after route changes/remounts.
+  useEffect(() => {
+    const savedPosition = sessionStorage.getItem(SCROLL_KEY);
+
+    if (navRef.current && savedPosition !== null) {
+      navRef.current.scrollTop = Number(savedPosition);
+    }
+  }, [pathname]);
+
+  // Save the sidebar's current scroll position.
+  function handleSidebarScroll() {
+    if (navRef.current) {
+      sessionStorage.setItem(
+        SCROLL_KEY,
+        String(navRef.current.scrollTop)
+      );
+    }
+  }
 
   return (
     <>
       {open && (
         <button
-          type="button"
           aria-label="Close sidebar"
           onClick={onClose}
           className="fixed inset-0 z-40 bg-black/70 lg:hidden"
@@ -87,7 +108,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex h-20 items-center justify-between border-b border-white/10 px-5">
+        <div className="flex h-20 shrink-0 items-center justify-between border-b border-white/10 px-5">
           <Link
             href="/"
             onClick={onClose}
@@ -101,6 +122,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
               <h1 className="text-lg font-bold text-white">
                 CareerOS AI
               </h1>
+
               <p className="text-[10px] tracking-widest text-gray-500">
                 YOUR CAREER COMPANION
               </p>
@@ -108,7 +130,6 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
           </Link>
 
           <button
-            type="button"
             onClick={onClose}
             className="text-gray-400 hover:text-white lg:hidden"
             aria-label="Close sidebar"
@@ -117,7 +138,11 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
           </button>
         </div>
 
-        <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-6">
+        <nav
+          ref={navRef}
+          onScroll={handleSidebarScroll}
+          className="min-h-0 flex-1 space-y-6 overflow-y-auto overscroll-contain px-3 py-6"
+        >
           {navigationGroups.map((group) => (
             <div key={group.title}>
               <p className="mb-3 px-3 text-[10px] font-semibold tracking-[2px] text-gray-500">
@@ -127,8 +152,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
               <div className="space-y-1">
                 {group.items.map((item) => {
                   const Icon =
-                    iconMap[item.icon as keyof typeof iconMap] ??
-                    CircleHelp;
+                    iconMap[item.icon as keyof typeof iconMap];
 
                   const active =
                     pathname === item.href ||
@@ -147,14 +171,18 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                           : "text-gray-400 hover:bg-white/5 hover:text-white"
                       }`}
                     >
-                      <Icon
-                        size={18}
-                        className={
-                          active
-                            ? "text-[#B58AFF]"
-                            : "text-gray-500"
-                        }
-                      />
+                      {Icon ? (
+                        <Icon
+                          size={18}
+                          className={
+                            active
+                              ? "text-[#B58AFF]"
+                              : "text-gray-500"
+                          }
+                        />
+                      ) : (
+                        <span className="h-[18px] w-[18px]" />
+                      )}
 
                       <span>{item.title}</span>
 
@@ -169,7 +197,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
           ))}
         </nav>
 
-        <div className="border-t border-white/10 p-4">
+        <div className="shrink-0 border-t border-white/10 bg-[#080811] p-4">
           <div className="rounded-xl border border-[#9855FF]/20 bg-[#9855FF]/10 p-3">
             <p className="text-xs font-semibold text-white">
               CareerOS AI
