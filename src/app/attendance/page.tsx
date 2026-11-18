@@ -2,9 +2,10 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import type { FormEvent } from "react";
 import WorkspaceShell from "@/components/WorkspaceShell";
 import { supabase } from "@/lib/supabase";
-import { CalendarCheck, Plus, Trash2, RefreshCw } from "lucide-react";
+import { CalendarCheck2, Plus, Trash2, RefreshCw } from "lucide-react";
 
 type Attendance = {
   id: string;
@@ -62,7 +63,7 @@ export default function AttendancePage() {
     return () => window.clearTimeout(timer);
   }, [loadRecords]);
 
-  async function addRecord(e: React.FormEvent<HTMLFormElement>) {
+  async function addRecord(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
 
@@ -257,7 +258,7 @@ export default function AttendancePage() {
       <div className="mx-auto max-w-6xl space-y-7 text-white">
         <header>
           <div className="flex items-center gap-2 text-violet-400">
-            <CalendarCheck size={20} />
+            <CalendarCheck2 size={20} />
             <span className="text-sm font-semibold">ACADEMIC TRACKER</span>
           </div>
 
@@ -269,7 +270,10 @@ export default function AttendancePage() {
         </header>
 
         {error && (
-          <div className="rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-300">
+          <div
+            role="alert"
+            className="rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-300"
+          >
             {error}
           </div>
         )}
